@@ -1,0 +1,17 @@
+absolute_path: /home/jason/mmfn
+data_folder: data/nss_0702
+train_towns:
+- Town03
+val_towns:
+- Town04
+logdir: log/mmfn_img
+train_agent:
+  entry_point: mmfn_utils.models.model_img:MMFN
+is_multi_gpu: true
+device: cuda
+batch_size: 24
+epochs: 101
+lr: 0.0001
+val_every: 5
+save_every: 20
+wandb_mode: disabled

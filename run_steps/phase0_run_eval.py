@@ -20,7 +20,7 @@ def main(args):
     # start CARLA =======
     args.trafficManagerPort = args.port + 6000
     if args.if_open_carla:
-        server_manager = CarlaServerManager(args.carla_sh_path, port=args.port)
+        server_manager = CarlaServerManager(args.carla_sh_path, port=args.port, gpu=args.gpu)
         server_manager.start()
 
     # select the route files from folder or just file
@@ -28,6 +28,7 @@ def main(args):
         print(f'{bc.OKGREEN} =======> input is a folder, start with for loop {bc.ENDC}' )
         route_folder = os.path.join(args.absolute_path, args.routes)
         all_route_files, routes_files = os.listdir(route_folder), []
+
         for rfile in all_route_files:
             town = rfile.split('_')[1].capitalize()
             if town in list(args.towns):

@@ -1,5 +1,5 @@
 # please remember to change this!!! TODO or will change by modi
-absolute_path: '/home/kin/mmfn'
+absolute_path: '/home/jason/Desktop/mmfn'
 
 data_folder: 'data/nss_0702'
 
@@ -31,3 +31,8 @@ save_every: 20
 
 # [offline, disabled, online]
 wandb_mode: "disabled"
+
+comet:
+  project_name: "MMFN Shenron Radar"
+  api_key: 'KPeUsRqhiz6nAFBQYCx9o8vb1'
+  workspace: "jeisontriton"

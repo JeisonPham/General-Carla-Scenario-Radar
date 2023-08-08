@@ -25,6 +25,7 @@ MAX_ALLOWED_RADIUS_SENSOR = 3.0
 SENSORS_LIMITS = {
     'sensor.camera.rgb': 4,
     'sensor.lidar.ray_cast': 1,
+    'sensor.lidar.ray_cast_semantic': 2,
     'sensor.other.radar': 2,
     'sensor.other.gnss': 1,
     'sensor.other.imu': 1,
@@ -54,6 +55,7 @@ class AgentWrapper(object):
         'sensor.camera.rgb',
         'sensor.camera',
         'sensor.lidar.ray_cast',
+        'sensor.lidar.ray_cast_semantic',
         'sensor.other.radar',
         'sensor.other.gnss',
         'sensor.other.imu'
@@ -108,16 +110,36 @@ class AgentWrapper(object):
                                                      roll=sensor_spec['roll'],
                                                      yaw=sensor_spec['yaw'])
                 elif sensor_spec['type'].startswith('sensor.lidar'):
-                    bp.set_attribute('range', str(85))
-                    bp.set_attribute('rotation_frequency', str(10))
-                    bp.set_attribute('channels', str(64))
-                    bp.set_attribute('upper_fov', str(10))
-                    bp.set_attribute('lower_fov', str(-30))
-                    bp.set_attribute('points_per_second', str(600000))
-                    bp.set_attribute('atmosphere_attenuation_rate', str(0.004))
-                    bp.set_attribute('dropoff_general_rate', str(0.45))
-                    bp.set_attribute('dropoff_intensity_limit', str(0.8))
-                    bp.set_attribute('dropoff_zero_intensity', str(0.4))
+                    COMMON_LIDAR_ATTRIBUTES = {
+                        "range": 85,
+                        "rotation_frequency": 10,
+                        "channels": 64,
+                        "upper_fov": 10,
+                        "lower_fov": -30,
+                        "points_per_second": 600000
+                    }
+                    for attribute, value in COMMON_LIDAR_ATTRIBUTES.items():
+                        bp.set_attribute(attribute, str(sensor_spec.get(attribute, value)))
+                    # bp.set_attribute('range', str(85))
+                    # bp.set_attribute('rotation_frequency', str(10))
+                    # bp.set_attribute('channels', str(64))
+                    # bp.set_attribute('upper_fov', str(10))
+                    # bp.set_attribute('lower_fov', str(-30))
+                    # bp.set_attribute('points_per_second', str(600000))
+
+                    NONSEMANTIC_LIDAR = {
+                        "atmosphere_attenuation_rate": 0.004,
+                        "dropoff_general_rate": 0.45,
+                        "dropoff_intensity_limit": 0.8,
+                        "dropoff_zero_intensity": 0.4
+                    }
+                    if "semantic" not in sensor_spec['type']:
+                        for attribute, value in NONSEMANTIC_LIDAR.items():
+                            bp.set_attribute(attribute, str(sensor_spec.get(attribute, value)))
+                    # bp.set_attribute('atmosphere_attenuation_rate', str(0.004))
+                    # bp.set_attribute('dropoff_general_rate', str(0.45))
+                    # bp.set_attribute('dropoff_intensity_limit', str(0.8))
+                    # bp.set_attribute('dropoff_zero_intensity', str(0.4))
                     sensor_location = carla.Location(x=sensor_spec['x'], y=sensor_spec['y'],
                                                      z=sensor_spec['z'])
                     sensor_rotation = carla.Rotation(pitch=sensor_spec['pitch'],

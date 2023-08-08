@@ -28,7 +28,7 @@ def kill_carla():
 
 
 class CarlaServerManager():
-    def __init__(self, carla_sh_str, port=2000, configs=None, t_sleep=10):
+    def __init__(self, carla_sh_str, port=2000, gpu=0, configs=None, t_sleep=10):
         self._carla_sh_str = carla_sh_str
         # self._root_save_dir = root_save_dir
         self._t_sleep = t_sleep
@@ -36,7 +36,7 @@ class CarlaServerManager():
 
         if configs is None:
             cfg = {
-                'gpu': 0,
+                'gpu': gpu,
                 'port': port,
             }
             self.env_configs.append(cfg)

@@ -28,6 +28,7 @@ class CARLA_Data(Dataset):
         self.maps = []
         self.vectormap = []
         self.radar = []
+        self.semantic_lidar = []
         self.x = []
         self.y = []
         self.x_command = []
@@ -62,6 +63,7 @@ class CARLA_Data(Dataset):
                 preload_maps = []
                 preload_vectormap = []
                 preload_radar = []
+                preload_semantic_lidar = []
                 # list sub-directories in root 
                 root_files = os.listdir(sub_root)
                 routes = [folder for folder in root_files if not os.path.isfile(os.path.join(sub_root,folder))]
@@ -76,6 +78,7 @@ class CARLA_Data(Dataset):
                     for seq in range(num_seq):
                         fronts = []
                         lidars = []
+                        semantic_lidar = []
                         xs = []
                         ys = []
                         thetas = []
@@ -92,6 +95,8 @@ class CARLA_Data(Dataset):
 
                             # point cloud
                             lidars.append(route_dir + f"/lidar/{str(seq*self.seq_len+1+i).zfill(4)}.npy")
+
+                            # semantic lidar
                             
                             # radar
                             radar.append(route_dir + f"/radar/{str(seq*self.seq_len+1+i).zfill(4)}.npy")
@@ -204,15 +209,15 @@ class CARLA_Data(Dataset):
             
             # for vectormap didn't create
             reindex = index
-            while not os.path.exists(seq_vectormaps[i]):
-                if reindex - 1 >= 0:
-                    reindex -= 1
-                else:
-                    reindex += 1
-                print('there is not vectormap on', index, 'reindex at ', reindex)
-                seq_vectormaps[i] = self.vectormap[reindex]
-
-            data['vectormaps'].append(torch.from_numpy(np.load(seq_vectormaps[i])))
+            # while not os.path.exists(seq_vectormaps[i]):
+            #     if reindex - 1 >= 0:
+            #         reindex -= 1
+            #     else:
+            #         reindex += 1
+            #     print('there is not vectormap on', index, 'reindex at ', reindex)
+            #     seq_vectormaps[i] = self.vectormap[reindex]
+            #
+            # data['vectormaps'].append(torch.from_numpy(np.load(seq_vectormaps[i])))
             
             data['maps'].append(torch.from_numpy(np.transpose(Image.open(seq_maps[i]), (2,0,1))))
             data['radar'].append(radar_to_size(np.load(seq_radar[i]), (81,5)))

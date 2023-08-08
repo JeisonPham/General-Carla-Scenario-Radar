@@ -20,6 +20,8 @@ import gc, sys, os, time
 from omegaconf import DictConfig
 import pickle
 from pathlib import Path
+import os
+
 
 from mmfn_utils.datasets.config import GlobalConfig
 from mmfn_utils.datasets.dataloader import CARLA_Data, PRE_Data
@@ -95,5 +97,6 @@ if __name__ == '__main__':
     except Exception as e:
         print("> {}\033[0m\n".format(e))
         print(bc.FAIL + "There is a error or close by users"+ bc.ENDC, 'clean memory', gc.collect())
-        sys.exit()
+        raise e
+
     

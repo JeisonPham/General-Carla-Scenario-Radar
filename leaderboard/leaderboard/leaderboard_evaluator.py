@@ -39,6 +39,7 @@ from leaderboard.utils.route_indexer import RouteIndexer
 sensors_to_icons = {
     'sensor.camera.rgb':        'carla_camera',
     'sensor.lidar.ray_cast':    'carla_lidar',
+    'sensor.lidar.ray_cast_semantic': 'carla_lidar',
     'sensor.other.radar':       'carla_radar',
     'sensor.other.gnss':        'carla_gnss',
     'sensor.other.imu':         'carla_imu',

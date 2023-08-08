@@ -142,6 +142,8 @@ class CallBack(object):
             self._parse_image_cb(data, self._tag)
         elif isinstance(data, carla.libcarla.LidarMeasurement):
             self._parse_lidar_cb(data, self._tag)
+        elif isinstance(data, carla.libcarla.SemanticLidarMeasurement):
+            self._parse_semantic_lidar_cb(data, self._tag)
         elif isinstance(data, carla.libcarla.RadarMeasurement):
             self._parse_radar_cb(data, self._tag)
         elif isinstance(data, carla.libcarla.GnssMeasurement):
@@ -159,6 +161,12 @@ class CallBack(object):
         array = copy.deepcopy(array)
         array = np.reshape(array, (image.height, image.width, 4))
         self._data_provider.update_sensor(tag, array, image.frame)
+
+    def _parse_semantic_lidar_cb(self, semantic_lidar, tag):
+        buffer = np.frombuffer(semantic_lidar.raw_data, dtype=np.dtype([('x', 'f4'), ('y', 'f4'), ('z', 'f4'), ('cos', 'f4'), ('index', 'u4'), ('semantic', 'u4')]))
+        points = np.vstack([buffer[:]['x'], buffer[:]['y'], buffer[:]['z'], buffer[:]['cos'], buffer[:]['index'], buffer[:]['semantic']])
+        points = copy.deepcopy(points).T
+        self._data_provider.update_sensor(tag, points, semantic_lidar.frame)
 
     def _parse_lidar_cb(self, lidar_data, tag):
         points = np.frombuffer(lidar_data.raw_data, dtype=np.dtype('f4'))
@@ -200,7 +208,7 @@ class SensorInterface(object):
         self._sensors_objects = {}
         self._data_buffers = {}
         self._new_data_buffers = Queue()
-        self._queue_timeout = 10
+        self._queue_timeout = 100
 
         # Only sensor that doesn't get the data on tick, needs special treatment
         self._opendrive_tag = None

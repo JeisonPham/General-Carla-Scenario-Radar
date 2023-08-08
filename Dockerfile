@@ -34,13 +34,13 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 
 # change to conda env
 ENV PATH /opt/conda/envs/python37/bin:/opt/conda/envs/bin:$PATH
-RUN mkdir -p /home/kin/mmfn/data -p /home/kin/carla
-WORKDIR /home/kin/mmfn
+RUN mkdir -p /home/jason/Desktop/mmfn/data -p /home/jason/Desktop/carla
+WORKDIR /home/jason/Desktop/mmfn
 
 # training need
 RUN pip3 install torch==1.10.2+cu113 torchvision==0.11.3+cu113 torchaudio==0.10.2+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
 RUN echo "export PYTHONWARNINGS="ignore"" >> ~/.zshrc
-RUN echo "export PYTHONPATH="/home/kin/mmfn/":${PYTHONPATH}" >> ~/.zshrc
+RUN echo "export PYTHONPATH="/home/jason/Desktop/mmfn/":${PYTHONPATH}" >> ~/.zshrc
 
 # 如果是3090以下 建议用10.2； 3090只能11.3
 # RUN pip3 install torch torchvision torchaudio
